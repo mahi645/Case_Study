@@ -1,12 +1,13 @@
 package com.book;
+import com.book.exception.*;
 import java.util.*;
 
-class MyException extends Exception {
-	MyException(String s){
-		super(s);
-		System.out.println(s);
-	}
-}
+//class MyException extends Exception {
+//	MyException(String s){
+//		super(s);
+//		System.out.println(s);
+//	}
+//}
 public class Book {
 	
 	private String bookID;
@@ -30,8 +31,9 @@ public class Book {
 	}
     public void setBookID(String bookID) {
     	try {
-    		if((bookID.charAt(0)!='B') && (bookID.length()!=4)) {
-    			throw new MyException("InvalidBookException");
+    		if((bookID.charAt(0)!='B') || (bookID.length()<4)) {
+    		//String s111="invalid";
+    			throw new MyException("invalid ");
     		}
     	
     	}
@@ -54,12 +56,13 @@ public class Book {
 	public void setCategory(String category) {
 		try {
 			if(category!="Science" || category!="Technology" || category!="Fiction" || category!="Others")
-			{
-				throw new MyException("InvalidBookException");
+			{ 
+				String str="InvalidBookException";
+				throw new MyException(str);
 			}
 		}
-		catch(MyException e) {
-			System.out.println();
+		catch(MyException str) {
+			System.out.println(str);
 		}
 		this.category=category;
 	}
@@ -113,54 +116,53 @@ public class Book {
 				System.out.println();
 				
 			}
-			void searchByTitle(String ti) {
-				
+			void searchByTitle() {
+				Scanner ss12=new Scanner(System.in);
+				System.out.println("enter the title to search:  ");
+				String text4=ss12.nextLine();
 				int x=book_title.size();
 				System.out.println(x);
 				System.out.println(book_title.get(0));
-				for(int j=0;j<book_title.size();j++) 
-				{
-					if(ti==book_title.get(j)) {
-						//int inde=book_price.indexOf("title");
-						System.out.println("anyushj");
-						System.out.println("bookID= "+bookArray.get(j)+"\t title= "+book_title.get(j)+"\t author"+book_author.get(j)+"\t category= "+book_category.get(j)+"\t price= "+book_price.get(j));
-					}
-				}	
+				
 				for(String c:book_title) {
-					if(ti==c) {
+					if(c.equals(text4)) {
 						//int inde=book_price.indexOf("title");
 						System.out.println("anyushj");
-						//System.out.println("bookID= "+bookArray.get(j)+"\t title= "+book_title.get(j)+"\t author"+book_author.get(j)+"\t category= "+book_category.get(j)+"\t price= "+book_price.get(j));
+						int i4=book_title.indexOf(text4);
+						System.out.println("bookID= "+bookArray.get(i4)+"\t title= "+book_title.get(i4)+"\t author"+book_author.get(i4)+"\t category= "+book_category.get(i4)+"\t price= "+book_price.get(i4));
 					}
 				}
-				System.out.println(book_title);
-				System.out.println(book_author);
 				
 			}
 		
-			void searchByAuthor(String t) {
-			
+			void searchByAuthor() {
+				Scanner s5=new Scanner(System.in);
+				System.out.println("enter the author name: ");
+				String t=s5.nextLine();
 				int y=book_title.size();
-				System.out.println(y);
-				System.out.println(book_title.get(0));
-				for(int m=0;m<y;m++) 
+				
+				for(String f:book_author) 
 				{
-					if(t==book_author.get(m)) {
+					if(f.equals(t)) {
 					//int inde=book_price.indexOf("title");
-						System.out.println("anyushj");
+						int m=book_author.indexOf(t);
 						System.out.println("bookID= "+bookArray.get(m)+"\t title= "+book_title.get(m)+"\t author"+book_author.get(m)+"\t category= "+book_category.get(m)+"\t price= "+book_price.get(m));
 					}
 				}	
 			
 			}
 		
-			void modify(String title1) {
-				int i1=book_title.indexOf(title1);
-				System.out.println(i1);
+			void modify() {
+				
 				Scanner ssc=new Scanner(System.in); 
-				System.out.println("modify book name: ");
+				System.out.println("enter  book title name to modify: ");
 				String s1=ssc.nextLine();
-				book_title.set(i1,s1);
+				int i1=book_title.indexOf(s1);
+				
+				System.out.println("modify book title: ");
+				String s7=ssc.nextLine();
+				System.out.println(i1);
+				book_title.set(i1,s7);
 				
 				System.out.println("modify book author: ");
 				String s2=ssc.nextLine();
@@ -171,19 +173,32 @@ public class Book {
 				System.out.println("modify price: ");
 				int s4=ssc.nextInt();
 				book_price.set(i1,s4);
+				System.out.println("bookID= "+bookArray.get(i1)+"\t title= "+book_title.get(i1)+"\t author"+book_author.get(i1)+"\t category= "+book_category.get(i1)+"\t price= "+book_price.get(i1));
 				ssc.close();
 			}
-			void dell(String ss) {
+			void dell() {
+				System.out.println("enter the delete book title: ");
+				//String text2=sssc.nextLine();
+				Scanner sc4=new Scanner(System.in);
+				String ss=sc4.nextLine();
 				int i2=book_title.indexOf(ss);
 				System.out.println(i2);
+				System.out.println(bookArray.get(i2));
 				bookArray.remove(i2);
 				book_title.remove(i2);
 				book_author.remove(i2);
 				book_category.remove(i2);
 				book_price.remove(i2);
+				int h1=book_title.size();
+				for (int g1=0;g1<h1;g1++) {
+					System.out.println("bookID= "+bookArray.get(g1)+"\t title= "+book_title.get(g1)+"\t author"+book_author.get(g1)+"\t category= "+book_category.get(g1)+"\t price= "+book_price.get(g1));
+				}
 				System.out.println(bookArray);
 			}
-			void disp_sin(String sss) {
+			void disp_sin() {
+				System.out.println("enter the display single book by title: ");
+				Scanner s22=new Scanner(System.in);
+				String sss=s22.nextLine();
 				int i3=book_title.indexOf(sss);
 				System.out.println(i3);
 				System.out.println("bookID= "+bookArray.get(i3)+"\t title= "+book_title.get(i3)+"\t author"+book_author.get(i3)+"\t category= "+book_category.get(i3)+"\t price= "+book_price.get(i3));
@@ -207,32 +222,30 @@ public class Book {
 			n.addBook();
 			break;
 		case 2:
-			System.out.println("enter the modify book title: ");
-			String text1=sssc.nextLine();
-			n.modify(text1);
+			
+			n.modify();
 			break;
 		case 3:
-			System.out.println("enter the delete book title: ");
-			String text2=sssc.nextLine();
-			n.dell(text2);
+			//System.out.println("enter the delete book title: ");
+			//String text2=sssc.nextLine();
+			n.dell();
 			break;
 		case 4:
 			n.all_disp();
 			break;
 		case 5:
-			System.out.println("enter the display single book by title: ");
-			String text3=sssc.nextLine();
-			n.disp_sin(text3);
+			
+			//String text3=sssc.nextLine();
+			n.disp_sin();
 			break;
 		case 6:
-			System.out.println("enter the title to search:  ");
-			String text4=sssc.nextLine();
-			n.searchByTitle(text4);
+			
+			n.searchByTitle();
 			break;
 		case 7:
-			System.out.println("enter the  book by author: ");
-			String text5=sssc.nextLine();
-			n.searchByAuthor(text5);
+			
+			
+			n.searchByAuthor();
 			break;
 		}
 		//n.searchByTitle("uma");
