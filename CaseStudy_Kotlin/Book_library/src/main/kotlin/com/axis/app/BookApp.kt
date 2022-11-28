@@ -23,7 +23,7 @@ fun main(){
                 for(i:Int in 0..3 ){
                     println("enter book id: ")
                     val bookID=scanner.next()
-                    if(bookID[0]!='B' && bookID.length==4){
+                    if(bookID.get(0)!='B' && bookID.length!=4){
                         throw myException
                     }
                     println("enter title: ")
@@ -54,7 +54,7 @@ fun main(){
                 println("=========================insertion========================")
                 println("enter book id: ")
                 val bookID=scanner.next()
-                if(bookID[0]!='B' && bookID.length==4){
+                if(bookID.get(0)!='B' && bookID.length!=4){
                     throw myException
                 }
                 println("enter title: ")
