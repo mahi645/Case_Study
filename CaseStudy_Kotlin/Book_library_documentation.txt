@@ -1,0 +1,336 @@
+/*
+used packages:         file Name
+com.axis--1.app           BookApp
+	  2.dbConnection  DbConnection
+	  3.service	  BookService
+	  4.util	  BookUtil
+	  5.exception	  InvalidBookException
+
+*/
+//Creation of Connection
+===========================================================================================================
+package com.axis.dbConnection
+import java.sql.DriverManager
+import java.sql.Connection
+class DbConnection {
+    fun connect():Connection{
+        val myurl="jdbc:mysql://localhost:3306/kotlindb"
+        val connection=DriverManager.getConnection(myurl,"root","M@hesw@ri645")
+        return connection
+    }
+
+}
+
+=============================================================================================================
+//Creation of Data class named BookModal
+================================================================================================================
+package com.axis.modal
+data class BookModal(var bookID:String,var title:String,var author:String,var category:String,var price:Int,var itemsCount:Int)
+{
+
+
+}
+==================================================================================================================
+//Creation Exception class named as InvalidBookException
+==================================================================================================================
+package com.axis.exception
+
+class InvalidBookException(message:String):Exception(message) {
+
+}
+=================================================================================================================
+//Creation util class named as BookUtil
+=================================================================================================================
+package com.axis.util
+
+import com.axis.dbConnection.DbConnection
+import com.axis.modal.BookModal
+
+class BookUtil {
+    //var bookModal=BookModal()
+    //insertion
+    val dbConnection=DbConnection()
+    val connection=dbConnection.connect()
+
+    //Storing 3 book details
+    fun storingBooks(book:BookModal){
+        //var statement=connection.prepareStatement("insert into book values('B123','You can win','Shiv khera','Science',500f,5);")
+        //statement.executeUpdate()
+        var statement=connection.prepareStatement("insert into book values(?,?,?,?,?,?);")
+        var bookID=statement.setString(1,book.bookID)
+        var title=statement.setString(2,book.title)
+        var author=statement.setString(3,book.author)
+        var category=statement.setString(4,book.category)
+        var price=statement.setInt(5,book.price)
+        var itemsCount=statement.setInt(6,book.itemsCount)
+        val res=statement.executeUpdate()
+    }
+	//insertion of Book
+    fun insertingBook(book:BookModal){
+        var statement=connection.prepareStatement("insert into book values(?,?,?,?,?,?);")
+        var bookID=statement.setString(1,book.bookID)
+        var title=statement.setString(2,book.title)
+        var author=statement.setString(3,book.author)
+        var category=statement.setString(4,book.category)
+        var price=statement.setInt(5,book.price)
+        var itemsCount=statement.setInt(6,book.itemsCount)
+        val res=statement.executeUpdate()
+        if(res>0){
+            println("book inserted successfully")
+        }
+        else{
+            println("book insertion failed")
+        }
+
+    }
+//Deletion of book by author
+    fun deleteByAuthor(author:String){
+        val statement=connection.prepareStatement("delete from book where author=author")
+        val res=statement.executeUpdate()
+        if(res>0){
+            println("$res books deleted")
+        }
+        else{
+            println("book not found to delete")
+        }
+    }
+//Deletion book by title
+    fun deleteByTitile(title:String){
+        val statement=connection.prepareStatement("delete from book where title=title")
+        val res=statement.executeUpdate()
+        if(res>0){
+            println("$res books deleted")
+        }
+        else{
+            println("book not found to delete")
+        }
+    }
+     //Deletion book by Category
+    fun deleteByCategory(category:String){
+        val statement=connection.prepareStatement("delete from book where category=category")
+        val res=statement.executeUpdate()
+        if(res>0){
+            println("$res books deleted")
+        }
+        else{
+            println("book not found to delete")
+        }
+    }
+    //Displaying all books
+    fun Display(){
+        val statement=connection.prepareStatement("select *from book ")
+        val res=statement.executeQuery()
+        val book= mutableListOf<BookModal>()
+        while (res.next()){
+            val bookID=res.getString("bookID")
+            val title=res.getString("title")
+            val author=res.getString("author")
+            val category=res.getString("category")
+            val price=res.getInt("price")
+            val itemsCount=res.getInt("itemsCount")
+            book.add(BookModal(bookID,title,author,category,price,itemsCount))
+        }
+        for (book1 in book){
+            println(book1)
+        }
+    }
+    //Updating book by author
+    fun updateByAuthor(author:String){
+        val statement=connection.prepareStatement("update book where author=author")
+        val res=statement.executeUpdate()
+        if(res>0){
+            println("$res rows updated")
+        }
+        else{
+            println("data not found to update")
+        }
+    }
+    //Seach book by author
+    fun searchByAuthor(author:String){
+        val statement=connection.prepareStatement("select *from book where author=author")
+        val res=statement.executeQuery()
+
+    }
+    //Search book by title
+    fun searchByTitle(title:String) {
+        val statement=connection.prepareStatement("select *from book where title=title")
+        val res=statement.executeQuery()
+    }
+}
+=================================================================================================================
+
+//Creation service class named as BookService
+=================================================================================================================
+
+package com.axis.service
+
+import com.axis.modal.BookModal
+import com.axis.util.BookUtil
+import java.util.Scanner
+class BookService {
+    val bookUtil=BookUtil()
+    val scanner=Scanner(System.`in`)
+    fun addingBooks(book:BookModal){
+        bookUtil.storingBooks(book)
+    }
+    fun insertion(book:BookModal){
+        bookUtil.insertingBook(book)
+    }
+    fun deletionByTitle(title:String){
+        bookUtil.deleteByTitile(title)
+    }
+    fun deletionByAuthor(author:String){
+        bookUtil.deleteByAuthor(author)
+    }
+    fun deletionByCategory(category:String){
+        bookUtil.deleteByCategory(category)
+    }
+    fun displayAllBooks(){
+        bookUtil.Display()
+    }
+    fun updateBookByAuthor(author:String){
+        bookUtil.updateByAuthor(author)
+    }
+    fun searchBookBytitle(title:String){
+        bookUtil.searchByTitle(title)
+    }
+    fun searchBookByAuthor(author:String){
+        bookUtil.searchByAuthor(author)
+    }
+
+}
+============================================================================================================
+//Creation app class named as BookApp
+============================================================================================================
+package com.axis.app
+import com.axis.exception.InvalidBookException
+import com.axis.modal.BookModal
+import java.util.Scanner
+import com.axis.service.BookService
+
+fun main(){
+    val scanner=Scanner(System.`in`)
+    val myException= InvalidBookException("Invalid Book Exception")
+    println("=======================welcome to BookStore======================")
+
+
+    println("1.Adding book\t2.insert book\t3.Modify Book by Author\t4.Delete book by author\t5.Delete book by title\n6.Delete book by category\t6." +
+            "7.Display all books\t8.Search book by title\t9.search book by author\t 10.exit")
+
+    val bookService=BookService()
+    while(true){
+        println("enter choice: ")
+        val choice=scanner.nextInt()
+        when(choice){
+            1->{
+                println("======================Adding 3 Books========================")
+                for(i:Int in 0..3 ){
+                    println("enter book id: ")
+                    val bookID=scanner.next()
+                    if(bookID[0]!='B' && bookID.length==4){
+                        throw myException
+                    }
+                    println("enter title: ")
+                    val title=scanner.next()
+                    println("enter author: ")
+                    val author=scanner.next()
+                    println("enter category: ")
+                    val category=scanner.next()
+                    if(category!="Science" || category!="Fiction" || category!="Technology" || category!="Others"){
+                        throw myException
+                    }
+                    println("enter price: ")
+                    val price=scanner.nextInt()
+                    if(price<0){
+                        throw myException
+                    }
+                    println("enter itemsCount: ")
+                    val itemsCount=scanner.nextInt()
+                    val book=BookModal(bookID,title, author, category, price, itemsCount)
+
+
+
+                    bookService.addingBooks(book)
+
+                }
+            }
+            2->{
+                println("=========================insertion========================")
+                println("enter book id: ")
+                val bookID=scanner.next()
+                if(bookID[0]!='B' && bookID.length==4){
+                    throw myException
+                }
+                println("enter title: ")
+                val title=scanner.next()
+                println("enter author: ")
+                val author=scanner.next()
+                println("enter category: ")
+                val category=scanner.next()
+                if(category!="Science" || category!="Fiction" || category!="Technology" || category!="Others"){
+                    throw myException
+                }
+                println("enter price: ")
+                val price=scanner.nextInt()
+                if(price<0){
+                    throw myException
+                }
+                println("enter itemsCount: ")
+                val itemsCount=scanner.nextInt()
+                val book=BookModal(bookID,title, author, category, price, itemsCount)
+                bookService.insertion(book)
+
+            }
+            3->{
+                println("================Modify Book By Author==============")
+                println("enter author name: ")
+                val author=scanner.next()
+                bookService.updateBookByAuthor(author)
+
+            }
+            4->{
+                println("=====================Delete book by author===================")
+                println("enter author name: ")
+                val author=scanner.next()
+                bookService.deletionByAuthor(author)
+
+            }
+            5->{
+                println("====================Delete book by title===================")
+                println("enter title: ")
+                val title=scanner.next()
+                bookService.deletionByTitle(title)
+            }
+            6->{
+                println("====================Delete book by category==================")
+                println("enter category: ")
+                val category=scanner.next()
+                if(category!="Science" || category!="Fiction" || category!="Technology" || category!="Others"){
+                    throw myException
+                }
+                bookService.deletionByCategory(category)
+            }
+            7->{
+                println("===========================Display all books=================")
+                bookService.displayAllBooks()
+            }
+            8->{
+                println("======================Search book by title===================")
+                println("enter title: ")
+                val title=scanner.next()
+                bookService.searchBookBytitle(title)
+            }
+            9->{
+                println("===================search book by author====================")
+                println("enter title: ")
+                val author=scanner.next()
+                bookService.searchBookByAuthor(author)
+            }
+            10->{
+                println("Program ends")
+                System.exit(0)
+            }
+        }
+    }
+}
+=============================================================================================
