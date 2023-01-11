@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.axis.model.Doctor;
 import com.axis.service.DoctorService;
-
+@CrossOrigin(origins="*")
 @RestController
 @RequestMapping("/api/v1")
 public class DoctorController {
@@ -36,13 +37,13 @@ public class DoctorController {
 		return new ResponseEntity<List<Doctor>>(doctor,HttpStatus.OK);
 	}
 
-	@GetMapping("/doctor/{id}")
+	@GetMapping("/doctor1/{id}")
 	public ResponseEntity<Doctor> getDoctorById(@PathVariable int id){
 		Doctor doctor=doctorService.getDoctorById(id);
 		return new ResponseEntity<Doctor>(doctor,HttpStatus.OK);
 	}
 	
-	@PutMapping("/doctor/{id}")
+	@PutMapping("/doctor2/{id}")
 	public ResponseEntity<Doctor> updateDoctor(@PathVariable int id,@RequestBody Doctor doctor){
 		Doctor doctor1=doctorService.updateDoctorById(id, doctor);
 		return new ResponseEntity<Doctor>(doctor1,HttpStatus.OK);

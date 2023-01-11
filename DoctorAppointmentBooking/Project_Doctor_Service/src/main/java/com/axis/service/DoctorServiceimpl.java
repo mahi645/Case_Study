@@ -47,6 +47,8 @@ public class DoctorServiceimpl implements DoctorService {
 		doctor1.setName(doctor.getName());
 		doctor1.setDepartment(doctor.getDepartment());
 		doctor1.setExperience(doctor.getExperience());
+		doctor1.setUsername(doctor.getUsername());
+		doctor1.setPassword(doctor.getPassword());
 		return doctorRepository.save(doctor1);
 	}
 
